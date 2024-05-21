@@ -64,8 +64,8 @@ Item {
             topMargin: 460
         }
         spacing: 20
-        width: 500
-        height: 400
+        // width: 500
+        // height: 400
 
         Button {
             id: startRecordingBtn
@@ -151,7 +151,7 @@ Item {
             width: 300
             height: 50
 
-            horizontalCenter: parent.horizontalCenter
+            // horizontalCenter: parent.horizontalCenter
 
             text: "Reset"
 
