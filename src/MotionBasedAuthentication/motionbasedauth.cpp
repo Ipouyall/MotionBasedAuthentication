@@ -3,6 +3,9 @@
 MotionBasedAuth::MotionBasedAuth(QObject *parent) :
     QObject(parent) {
     sensorHandler = new SensorHandler();
+    is_auth_pattern = true;
+    attempt_number = 1;
+    connect(sensorHandler, &SensorHandler::newPathAdded, this, &MotionBasedAuth::newPathReceived);
 }
 
 QJsonArray MotionBasedAuth::getPath() const {
@@ -13,25 +16,28 @@ void MotionBasedAuth::startRecording() {
     // TODO: Add start record functionality/UI here
     sensorHandler->reset();
     sensorHandler->start();
+    is_auth_pattern = false;
 }
 
 void MotionBasedAuth::endRecording() {
     sensorHandler->stop();
-    attemptPaths.append(sensorHandler->getPaths());
+    attemptPaths.last() = sensorHandler->getPaths();
     qDebug() << "attempt Path: ";
     sensorHandler->printAllPaths();
+    attempt_number++;
     authenticate();
 }
 
 void MotionBasedAuth::authenticate() {
     // TODO: Fix codes here
     // TODO: now we just imagine that the user is authenticated successfully
-
-    is_authenticated = true;
+    QJsonObject result = this->comparePaths(attemptPaths.last());
+    is_authenticated = result["authenticated"].toBool();
     emit statusChanged(is_authenticated);
 }
 
 void MotionBasedAuth::startPattern(){
+    is_auth_pattern = true;
     sensorHandler->reset();
     sensorHandler->start();
 }
@@ -44,19 +50,124 @@ void MotionBasedAuth::endPattern(){
 
 
 void MotionBasedAuth::showData() {
-    data = "A sample data";
+    data = this->formatData();
     emit dataChanged(data);
+}
+
+QString MotionBasedAuth::formatData() {
+    QString result = "================================\n";
+    result += "Authentication Data:\n";
+    for (const Path &path : authPaths) {
+        result += formatPath(path);
+    }
+    result += "================================\n";
+
+    for (int i = 0; i < attemptPaths.size(); ++i) {
+        result += QString("Attempt %1:\n").arg(i + 1);
+        for (const Path &path : attemptPaths[i]) {
+            result += formatPath(path);
+        }
+        result += "================================\n";
+    }
+    return result;
+}
+
+QString MotionBasedAuth::formatPath(const Path &path) {
+    return QString("Start:(X: %1, Y: %2, Z: %3)\n"
+                   "End:(X: %4, Y: %5, Z: %6)\n"
+                   "Angle: %7\n"
+                   "Direction: %8\n\n")
+        .arg(path.getStartX())
+        .arg(path.getStartY())
+        .arg(path.getStartZ())
+        .arg(path.getEndX())
+        .arg(path.getEndY())
+        .arg(path.getEndZ())
+        .arg(path.getAngle())
+        .arg(path.getDirection());
+}
+
+void MotionBasedAuth::newPathReceived(QVector<Path> newPath) {
+    if (is_auth_pattern) {
+        authPaths = sensorHandler->getPaths();
+    } else {
+        if (attempt_number > attemptPaths.size()) {
+            attemptPaths.append(sensorHandler->getPaths());
+        } else {
+            attemptPaths.last() = sensorHandler->getPaths();
+        }
+    }
+    this->showData();
+    this->getPath();
 }
 
 void MotionBasedAuth::getPath() {
     // Simulate loading path data from JSON object
-    QJsonArray pathArray = QJsonArray::fromStringList({
-        "{\"start\": {\"x\": 0, \"y\": 0}, \"end\": {\"x\": 100, \"y\": 0}, \"direction\": \"top\", \"angle\": 0}",
-        "{\"start\": {\"x\": 100, \"y\": 0}, \"end\": {\"x\": 100, \"y\": 100}, \"direction\": \"right\", \"angle\": 90}",
-        "{\"start\": {\"x\": 100, \"y\": 100}, \"end\": {\"x\": 0, \"y\": 100}, \"direction\": \"bottom\", \"angle\": 180}",
-        "{\"start\": {\"x\": 0, \"y\": 100}, \"end\": {\"x\": 0, \"y\": 0}, \"direction\": \"left\", \"angle\": -90}"
-    });
+    // QJsonArray pathArray = QJsonArray::fromStringList({
+    //     "{\"start\": {\"x\": 0, \"y\": 0}, \"end\": {\"x\": 100, \"y\": 0}, \"direction\": \"top\", \"angle\": 0}",
+    //     "{\"start\": {\"x\": 100, \"y\": 0}, \"end\": {\"x\": 100, \"y\": 100}, \"direction\": \"right\", \"angle\": 90}",
+    //     "{\"start\": {\"x\": 100, \"y\": 100}, \"end\": {\"x\": 0, \"y\": 100}, \"direction\": \"bottom\", \"angle\": 180}",
+    //     "{\"start\": {\"x\": 0, \"y\": 100}, \"end\": {\"x\": 0, \"y\": 0}, \"direction\": \"left\", \"angle\": -90}"
+    // });
+    QJsonArray pathArray = QJsonArray();
+    QVector<Path> paths = sensorHandler->getPaths();
+    // for (Path path : paths) {
+    //     pathArray.append(path.toJson());
+    // }
+    for (int i = 0; i < paths.size(); ++i) {
+        pathArray.append(paths[i].toJson());
+    }
 
     this->pathArray = pathArray;
     emit pathChanged(pathArray);
+}
+
+QJsonObject MotionBasedAuth::comparePaths(const QVector<Path>& attemptPath) {
+    QJsonObject result;
+
+    // Check if the number of elements in both vectors is the same
+    if (authPaths.size() != attemptPath.size()) {
+        result["error"] = "Different number of paths";
+        result["authenticated"] = false;
+        return result;
+    }
+
+    // Iterate over each pair of paths and compare them
+    for (int i = 0; i < authPaths.size(); ++i) {
+        const Path& auth = authPaths.at(i);
+        const Path& attempt = attemptPath.at(i);
+
+        // Compare start points with a 50% error for each coordinate
+        if (std::fabs(auth.getStartX() - attempt.getStartX()) > 0.75 * std::fabs(auth.getStartX()) ||
+            std::fabs(auth.getStartY() - attempt.getStartY()) > 0.75 * std::fabs(auth.getStartY())) {
+            result["error"] = "Mismatch in start point coordinates";
+            result["authenticated"] = false;
+            return result;
+        }
+
+        // Compare end points with a 50% error for each coordinate
+        if (std::fabs(auth.getEndX() - attempt.getEndX()) > 0.75 * std::fabs(auth.getEndX()) ||
+            std::fabs(auth.getEndY() - attempt.getEndY()) > 0.75 * std::fabs(auth.getEndY())) {
+            result["error"] = "Mismatch in end point coordinates";
+            result["authenticated"] = false;
+            return result;
+        }
+
+        // Compare other attributes (e.g., angle, direction) if needed
+        // For simplicity, assume that angle and direction are equal for authentication and attempt paths
+        if (auth.getAngle() != attempt.getAngle()) {
+            result["error"] = "Mismatch in angle";
+            result["authenticated"] = false;
+            return result;
+        }
+        if (auth.getDirection() != attempt.getDirection()) {
+            result["error"] = "Mismatch in direction";
+            result["authenticated"] = false;
+            return result;
+        }
+    }
+
+    // If no mismatches were found, return an empty object
+    result["authenticated"] = true;
+    return result;
 }

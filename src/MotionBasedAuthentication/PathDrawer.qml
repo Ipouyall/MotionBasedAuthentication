@@ -46,7 +46,7 @@ Item {
             var maxX = findMax('x', adjustedPathData);
             var scaleX = Math.min(width*0.8, width-80) / maxX;
             var scaleY = Math.min(height*0.8, height-80) / maxY;
-            var scale = Math.min(scaleX, scaleY, 1);
+            var scale = Math.min(scaleX, scaleY, 1000);
 
             if (adjustedPathData.length > 0) {
                 var offsetX = 40;
@@ -75,10 +75,10 @@ Item {
 
     function requestPaint(path) {
         pathData = path
-        for (var i = 0; i < path.length; i++){
-            var d = JSON.parse(path[i])
-            pathData[i] = d
-        }
+        // for (var i = 0; i < path.length; i++){
+        //     var d = JSON.parse(path[i])
+        //     pathData[i] = d
+        // }
         patternMap.requestPaint()
     }
 

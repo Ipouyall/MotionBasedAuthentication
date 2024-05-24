@@ -20,6 +20,9 @@ public:
     QVector<Path> getPaths() const;
     void printAllPaths() const;
 
+signals:
+    void newPathAdded(QVector<Path> newPath);
+
 private slots:
     void handlePathData(double deltaX, double deltaY, double deltaZ);
 

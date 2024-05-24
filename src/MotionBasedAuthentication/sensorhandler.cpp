@@ -108,6 +108,7 @@ void SensorHandler::addNewPath(double deltaX, double deltaY, double deltaZ, doub
         }
     }
     paths.append(Path(startX, startY, startZ, adjustedEndX, adjustedEndY, deltaZ, angleZ, direction));
+    emit newPathAdded(paths);
     startX = adjustedEndX;
     startY = adjustedEndY;
     lastPathTime = currentTime;

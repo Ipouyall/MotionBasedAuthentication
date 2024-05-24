@@ -20,6 +20,9 @@ public:
     Q_PROPERTY(QJsonArray  pathArray NOTIFY pathChanged FINAL)
 
     QJsonArray getPath() const;
+    QString formatData();
+    QString formatPath(const Path &path);
+    QJsonObject comparePaths(const QVector<Path>& attemptPath);
 
 Q_SIGNALS:
     void statusChanged(bool result);
@@ -34,9 +37,12 @@ public Q_SLOTS:
     void authenticate();
     void showData();
     void getPath();
+    void newPathReceived(QVector<Path> newPath);
 
 private:
     SensorHandler* sensorHandler;
+    int attempt_number;
+    bool is_auth_pattern;
     bool is_authenticated;
     QString data;
     QJsonArray pathArray;
