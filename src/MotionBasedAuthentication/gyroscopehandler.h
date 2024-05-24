@@ -10,9 +10,13 @@ class GyroscopeHandler : public QObject
 {
     Q_OBJECT
 public:
-    GyroscopeHandler();
+    GyroscopeHandler(QObject *parent = nullptr);
     ~GyroscopeHandler();
     double getAngleZ() const;
+    bool isMoving() const;
+    void reset(); // Method to reset the handler
+    void start(); // Method to start the handler
+    void stop();  // Method to stop the handler
 
     void printAngularDisplacement() const;
 
@@ -28,8 +32,8 @@ private:
     double angleX, angleY, angleZ; // Angular displacement
 
     const double threshold = 0.1; // Threshold for gyroscope changes
-    int zeroVelocityCounter = 0; // Counter for zero velocity readings
-    bool wasMoving = false; // Indicates if there was movement before stopping
+    int zeroVelocityCounter = 0;  // Counter for zero velocity readings
+    bool wasMoving = false;       // Indicates if there was movement before stopping
 
     void roundAnglesToNearest90(); // Method to round angles to nearest multiple of 90
     double roundTooNearest90(double angle) const;

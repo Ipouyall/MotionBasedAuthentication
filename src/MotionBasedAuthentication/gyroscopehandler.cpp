@@ -1,18 +1,19 @@
 #include "GyroscopeHandler.h"
 #include <QDebug>
 
-GyroscopeHandler::GyroscopeHandler()
-    : angularVelocityX(0.0), angularVelocityY(0.0), angularVelocityZ(0.0),
-    angleX(0.0), angleY(0.0), angleZ(0.0)
+GyroscopeHandler::GyroscopeHandler(QObject *parent)
+    : QObject(parent),
+      angularVelocityX(0.0), angularVelocityY(0.0), angularVelocityZ(0.0),
+      angleX(0.0), angleY(0.0), angleZ(0.0)
 {
     // Create a gyroscope sensor
     gyroscope = new QGyroscope(this);
-    gyroscope->start();
+    // gyroscope->start();
 
     // Create a timer for periodic reading
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &GyroscopeHandler::readGyroscopeValues);
-    timer->start(200); // 200 milliseconds interval
+    // timer->start(200); // 200 milliseconds interval
 
     // Start the elapsed timer
     elapsedTimer.start();
@@ -28,16 +29,20 @@ void GyroscopeHandler::readGyroscopeValues()
 {
     // Get the current reading
     QGyroscopeReading *reading = gyroscope->reading();
-    if (reading) {
+    if (reading)
+    {
         // Read angular velocity
         double omegaX = reading->x();
         double omegaY = reading->y();
         double omegaZ = reading->z();
 
         // Apply threshold
-        if (qAbs(omegaX) < threshold) omegaX = 0.0;
-        if (qAbs(omegaY) < threshold) omegaY = 0.0;
-        if (qAbs(omegaZ) < threshold) omegaZ = 0.0;
+        if (qAbs(omegaX) < threshold)
+            omegaX = 0.0;
+        if (qAbs(omegaY) < threshold)
+            omegaY = 0.0;
+        if (qAbs(omegaZ) < threshold)
+            omegaZ = 0.0;
 
         // Calculate time interval
         double deltaTime = elapsedTimer.elapsed() / 1000.0; // convert to seconds
@@ -56,25 +61,22 @@ void GyroscopeHandler::readGyroscopeValues()
         angleZ += angularVelocityZ * deltaTime;
 
         // Check if velocity is zero
-        if (omegaX == 0.0 && omegaY == 0.0 && omegaZ == 0.0) {
+        if (omegaX == 0.0 && omegaY == 0.0 && omegaZ == 0.0)
+        {
             zeroVelocityCounter++;
-            if (wasMoving && zeroVelocityCounter >= 5) {
+            if (wasMoving && zeroVelocityCounter >= 5)
+            {
                 roundAnglesToNearest90();
                 printAngularDisplacement();
                 zeroVelocityCounter = 0; // Reset the counter
-                wasMoving = false; // Reset wasMoving after rounding
+                wasMoving = false;       // Reset wasMoving after rounding
             }
-        } else {
-            zeroVelocityCounter = 0; // Reset the counter if velocity is non-zero
-            wasMoving = true; // Set wasMoving to true if there is any movement
         }
-
-        // qDebug() << "Gyroscope values - OmegaX:" << omegaX
-        //          << " OmegaY:" << omegaY
-        //          << " OmegaZ:" << omegaZ;
-        // qDebug() << "Angular Displacement - AngleX:" << angleX
-        //          << " AngleY:" << angleY
-        //          << " AngleZ:" << angleZ;
+        else
+        {
+            zeroVelocityCounter = 0; // Reset the counter if velocity is non-zero
+            wasMoving = true;        // Set wasMoving to true if there is any movement
+        }
     }
 }
 
@@ -86,19 +88,8 @@ void GyroscopeHandler::printAngularDisplacement() const
     qDebug() << "AngleZ:" << angleZ;
 }
 
-
 void GyroscopeHandler::roundAnglesToNearest90()
 {
-    // auto roundToNearest90 = [](double angle) {
-    //     double remainder = std::fmod(angle, 90.0);
-    //     if (remainder < 0) remainder += 90.0; // Handle negative angles
-    //     if (remainder < 45.0) {
-    //         return static_cast<int>(angle - remainder);
-    //     } else {
-    //         return static_cast<int>(angle - remainder + 90.0);
-    //     }
-    // };
-
     angleX = roundTooNearest90(angleX);
     angleY = roundTooNearest90(angleY);
     angleZ = roundTooNearest90(angleZ);
@@ -108,12 +99,17 @@ void GyroscopeHandler::roundAnglesToNearest90()
              << " AngleZ:" << angleZ;
 }
 
-double GyroscopeHandler::roundTooNearest90(double angle) const {
+double GyroscopeHandler::roundTooNearest90(double angle) const
+{
     double remainder = std::fmod(angle, 90.0);
-    if (remainder < 0) remainder += 90.0; // Handle negative angles
-    if (remainder < 45.0) {
+    if (remainder < 0)
+        remainder += 90.0; // Handle negative angles
+    if (remainder < 45.0)
+    {
         return static_cast<int>(angle - remainder);
-    } else {
+    }
+    else
+    {
         return static_cast<int>(angle - remainder + 90.0);
     }
 }
@@ -123,3 +119,41 @@ double GyroscopeHandler::getAngleZ() const
     return roundTooNearest90(angleZ);
 }
 
+bool GyroscopeHandler::isMoving() const
+{
+    return wasMoving;
+}
+
+void GyroscopeHandler::reset()
+{
+    angularVelocityX = 0.0;
+    angularVelocityY = 0.0;
+    angularVelocityZ = 0.0;
+    angleX = 0.0;
+    angleY = 0.0;
+    angleZ = 0.0;
+    wasMoving = false;
+    zeroVelocityCounter = 0;
+    elapsedTimer.restart();
+    this->stop();
+}
+
+void GyroscopeHandler::start()
+{
+    this->reset();
+    gyroscope->start();
+    timer->start(200);
+    elapsedTimer.restart();
+}
+
+void GyroscopeHandler::stop()
+{
+    if (gyroscope)
+    {
+        gyroscope->stop();
+    }
+    if (timer)
+    {
+        timer->stop();
+    }
+}

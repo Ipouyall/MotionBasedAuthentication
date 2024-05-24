@@ -14,12 +14,18 @@ class AccelerometerHandler : public QObject
 {
     Q_OBJECT
 public:
-    AccelerometerHandler();
+    AccelerometerHandler(QObject *parent = nullptr);
     void printAllPaths() const;
+    void reset(); // Method to reset the handler
+    void stop();
+    void start();
 
 private slots:
     void readSensorValues();
     void calculateBias();
+
+signals:
+    void pathDataReady(double deltaX, double deltaY, double deltaZ);
 
 private:
     QAccelerometer *accelerometer;
@@ -27,7 +33,7 @@ private:
     QVector<double> xReadings, yReadings, zReadings;
     double xBias, yBias, zBias;
     bool isCalibrating;
-    const double threshold = 0.1; // Threshold for accelerometer changes
+    const double threshold = 0.1;          // Threshold for accelerometer changes
     const double velocityThreshold = 0.01; // Threshold for velocity
 
     // For distance calculation
@@ -39,14 +45,11 @@ private:
     bool wasMoving;
     KalmanFilter kalmanX, kalmanY, kalmanZ;
 
-    // Store paths
-    QVector<Path> paths;
-    double startX, startY, startZ;
+    // // Store paths
+    // QVector<Path> paths;
+    // double startX, startY, startZ;
 
-    // Gyroscope handler for circular movement
-    GyroscopeHandler *gyroscopeHandler;
-
-    void addNewPath(double endX, double endY, double endZ, double angleZ);
+    // void addNewPath(double endX, double endY, double endZ, double angleZ);
 };
 
 #endif // ACCELEROMETERHANDLER_H
