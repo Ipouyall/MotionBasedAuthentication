@@ -136,9 +136,11 @@ Item {
                 if (value === 1) {
                     myPathDrawer.visible = true
                     flickableContainer.visible = false
+                    logTextBox.text = "Enabling Graphical view!"
                 } else {
                     myPathDrawer.visible = false
                     flickableContainer.visible = true
+                    logTextBox.text = "Enabling Textual view!"
                 }
             }
         }
@@ -170,6 +172,7 @@ Item {
                 text: "Start Attempt"
 
                 onClicked: {
+                    logTextBox.text = "Starting an Authentication Attempt..."
                     motionBasedAuthentication.startRecording()
                 }
             }
@@ -183,6 +186,7 @@ Item {
                 text: "End Attempt"
 
                 onClicked: {
+                    logTextBox.text = "Authentication Attempt ended."
                     motionBasedAuthentication.endRecording()
                 }
             }
@@ -200,6 +204,7 @@ Item {
                 text: "Start Pattern"
 
                 onClicked: {
+                    logTextBox.text = "Capturing Authentication pattern..."
                     motionBasedAuthentication.startPattern()
                 }
             }
@@ -213,6 +218,7 @@ Item {
                 text: "End Pattern"
 
                 onClicked: {
+                    logTextBox.text = "Authentication pattern Captured!"
                     motionBasedAuthentication.endPattern()
                 }
             }
