@@ -57,6 +57,10 @@ Item {
             width: parent.width
             height: parent.height
             anchors.verticalCenter: parent.top
+            interactive: true
+
+            contentHeight: parent.height * 0.45
+            contentWidth: parent.width * 0.75
 
             flickableDirection: Flickable.VerticalFlick
 
