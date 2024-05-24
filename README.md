@@ -178,6 +178,28 @@ Additional Details:
 
 ### Pattern validation
 
+
+The pattern validation part in the provided code is implemented in the MotionBasedAuth class. Let's break down how this approach works:
+
+#### Pattern Recording
+
+ When the user initiates pattern recording through the startPattern() method, the MotionBasedAuth class sets a flag (is_auth_pattern) to indicate that the pattern is being recorded. It then resets the sensor handler (sensorHandler) and starts it. The sensor handler collects data from the accelerometer and gyroscope.
+
+#### Pattern Recording Termination
+ When the user ends the pattern recording using the endPattern() method, the sensor handler stops, and the recorded paths are retrieved from the sensor handler using sensorHandler->getPaths(). These paths represent the motion pattern performed by the user during the recording phase.
+
+#### Pattern Authentication
+ During authentication, the MotionBasedAuth class compares the recorded pattern with the attempted pattern. This comparison is done in the comparePaths() method. The method iterates over each pair of paths in the recorded pattern and the attempted pattern.
+
+#### Path Comparison
+ For each pair of paths, the comparePaths() method checks if the start and end points of the paths are within a certain tolerance of each other. If they are not, it indicates a mismatch and returns a JSON object with an error message and an authentication status of false.
+
+#### Authentication Result
+ If all paths in the recorded pattern match their corresponding paths in the attempted pattern within the defined tolerance, the authentication is considered successful, and the method returns a JSON object with an empty error message and an authentication status of true.
+
+#### Signal Emission
+ After comparing the patterns, the authentication result is emitted through the statusChanged() signal, indicating whether the authentication was successful or not.
+ 
 ---
 
 ## Perfetto
