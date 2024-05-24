@@ -17,6 +17,7 @@ public:
 
     Q_PROPERTY(bool is_authenticated NOTIFY statusChanged FINAL)
     Q_PROPERTY(QString data NOTIFY dataChanged FINAL)
+    Q_PROPERTY(QString log NOTIFY logChanged FINAL)
     Q_PROPERTY(QJsonArray  pathArray NOTIFY pathChanged FINAL)
 
     QJsonArray getPath() const;
@@ -27,6 +28,7 @@ public:
 Q_SIGNALS:
     void statusChanged(bool result);
     void dataChanged(QString data);
+    void logChanged(QString log);
     void pathChanged(QJsonArray path);
 
 public Q_SLOTS:
@@ -44,7 +46,9 @@ private:
     int attempt_number;
     bool is_auth_pattern;
     bool is_authenticated;
+    QString log;
     QString data;
+
     QJsonArray pathArray;
     QVector<Path> authPaths;
     QVector<QVector<Path>> attemptPaths;

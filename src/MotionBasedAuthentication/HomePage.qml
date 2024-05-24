@@ -18,6 +18,7 @@ Item {
         onStatusChanged: function(stat) {
             statTextShort.text = stat ? "Successfully Authenticated!" : "Authentication Failed!"
             statTextShort.color = stat ? "green" : "red"
+            // logTextBox.color = stat ? "light blue" : "yellow"
             dialog.show(stat)
         }
 
@@ -29,13 +30,17 @@ Item {
             myPathDrawer.pathData = path
             pathDrawerComponent.requestPaint(path)
         }
+
+        onLogChanged: function(log) {
+            logTextBox.text = log
+        }
     }
 
     Label {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: parent.height * 0.017
+            topMargin: parent.height * 0.02
         }
         id: statTextShort
         width: 400
@@ -51,7 +56,7 @@ Item {
         width: parent.width * 0.75
         height: parent.height * 0.45
         anchors.centerIn: parent
-        anchors.topMargin: parent.height * 0.6
+        anchors.topMargin: parent.height * 0.62
 
         Flickable {
             width: parent.width
@@ -82,7 +87,7 @@ Item {
         width: parent.width * 0.75
         height: parent.height * 0.45
         anchors.centerIn: parent
-        anchors.topMargin: parent.height * 0.6
+        anchors.topMargin: parent.height * 0.62
         property variant pathData: []
 
         PathDrawer {
@@ -94,22 +99,36 @@ Item {
         }
     }
 
+    Text {
+        anchors {
+            top: parent.top
+            horizontalCenter: parent.horizontalCenter
+            topMargin: parent.height * 0.55
+        }
+        id: logTextBox
+        text: "Welcome to Phinix Motion-Based Authentication app!"
+        color: "light blue"
+        anchors.verticalCenter: parent.verticalCenter
+    }
+
     Row {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: parent.height * 0.56
+            topMargin: parent.height * 0.62
         }
         spacing: 20
 
         Text {
             text: "(textual)"
             color: "pink"
+            anchors.verticalCenter: parent.verticalCenter
         }
 
         Slider {
             id: componentSlider
             width: 100
+            anchors.verticalCenter: parent.verticalCenter
             from: 0
             to: 1
             stepSize: 1
@@ -126,6 +145,7 @@ Item {
         Text {
             text: "(graphical)"
             color: "pink"
+            anchors.verticalCenter: parent.verticalCenter
         }
     }
 
@@ -134,7 +154,7 @@ Item {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: parent.height * 0.62
+            topMargin: parent.height * 0.7
         }
         spacing: parent.height * 0.017
 
@@ -247,6 +267,8 @@ Item {
         pathDrawerComponent.requestPaint([])
 
         textStatArea.text = "No data. The device has been reset!"
+
+        logTextBox.text = ""
     }
 }
 
