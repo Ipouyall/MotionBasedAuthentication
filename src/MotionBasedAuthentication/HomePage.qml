@@ -24,6 +24,12 @@ Item {
         onDataChanged: function(data) {
             textStatArea.text = data
         }
+
+        onPathChanged: function(path) {
+            console.log("New path data received:", path)
+            myPathDrawer.pathData = path
+            pathDrawerComponent.requestPaint(path)
+        }
     }
 
     Label {
@@ -69,19 +75,16 @@ Item {
 
     Rectangle {
         id: myPathDrawer
-        visible: true
+        visible: false
         width: 360
         height: 270
         anchors.centerIn: parent
         anchors.topMargin: 300
+        property variant pathData: []
 
         PathDrawer {
-            pathData: [
-                {"start": {"x": -100, "y": 0}, "end": {"x": 100, "y": 0}, "direction": "top", "angle": 0},
-                {"start": {"x": 100, "y": 0}, "end": {"x": 100, "y": 100}, "direction": "right", "angle": 90},
-                {"start": {"x": 100, "y": 1000}, "end": {"x": 1000, "y": 100}, "direction": "bottom", "angle": 180},
-                {"start": {"x": 1000, "y": 100}, "end": {"x": -100, "y": -300}, "direction": "left", "angle": -90}
-            ]
+            id: pathDrawerComponent
+            pathData: myPathDrawer.pathData
             anchors.fill: parent
             width: 420
             height: 300
@@ -97,7 +100,7 @@ Item {
         spacing: 20
 
         Text {
-            text: "(graphical)"
+            text: "(textual)"
             color: "pink"
         }
 
@@ -108,7 +111,7 @@ Item {
             to: 1
             stepSize: 1
             onValueChanged: {
-                if (value === 0) {
+                if (value === 1) {
                     myPathDrawer.visible = true
                     flickableContainer.visible = false
                 } else {
@@ -118,7 +121,7 @@ Item {
             }
         }
         Text {
-            text: "(textual)"
+            text: "(graphical)"
             color: "pink"
         }
     }
@@ -215,7 +218,8 @@ Item {
             text: "Authenticate"
 
             onClicked: {
-                motionBasedAuthentication.authenticate()
+                // motionBasedAuthentication.authenticate()
+                motionBasedAuthentication.getPath()
             }
         }
     }

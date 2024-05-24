@@ -69,6 +69,16 @@ Item {
             }
             ctx.stroke();
         }
+
+        // Component.onCompleted: patternMap.requestPaint()
+    }
+
+    function requestPaint(path) {
+        pathData = path
+        console.log("(1) Length:", path.length)
+        for (var i = 0; i < path.length; i++)
+            console.log("(1) [",i,"]: ", path[i])
+        patternMap.requestPaint()
     }
 
     function findMin(axis, array) {
@@ -113,19 +123,4 @@ Item {
         }
         return max;
     }
-
-    // Button {
-    //     text: "Back"
-    //     anchors {
-    //         bottom: parent.bottom
-    //         horizontalCenter: parent.horizontalCenter
-    //         bottomMargin: 10
-    //     }
-    //     width: 300
-    //     height: 50
-
-    //     onClicked: {
-    //         stackView.pop()
-    //     }
-    // }
 }
