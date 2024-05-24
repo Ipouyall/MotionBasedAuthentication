@@ -18,7 +18,6 @@ Item {
         onStatusChanged: function(stat) {
             statTextShort.text = stat ? "Successfully Authenticated!" : "Authentication Failed!"
             statTextShort.color = stat ? "green" : "red"
-            // logTextBox.color = stat ? "light blue" : "yellow"
             dialog.show(stat)
         }
 

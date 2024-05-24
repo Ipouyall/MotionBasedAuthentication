@@ -42,8 +42,43 @@ There exists another qml fine, named `PathDrawer.qml`. It contains a component u
 
 Here are some screenshots of the front-end:
 
+#### Defining pattern
 
+Start defining pattern:
 
+![Start defining pattern](./Docs/figs/01_define%20pattern.jpg)
+
+End defining pattern:
+
+![End defining pattern](./Docs/figs/01_define%20pattern2.jpg)
+
+#### On Successful attempt
+
+Pop-up view:
+
+![pop-up succeed](./Docs/figs/02_Succed%20Attempt.jpg)
+
+Textual view:
+
+![textual succeed](./Docs/figs/02_Succed%20Attempt2.jpg)
+
+Graphical view:
+
+![graph succeed](./Docs/figs/02_Succed%20Attempt3.jpg)
+
+#### On Failed Attempt
+
+Pop-up view:
+
+![pop-up failed](./Docs/figs/03_Failed%20Attempt.jpg)
+
+Textual view:
+
+![textual failed](./Docs/figs/03_Failed%20Attempt2.jpg)
+
+Graphical view:
+
+![graph failed](./Docs/figs/03_Failed%20Attempt3.jpg)
 
 ---
 
