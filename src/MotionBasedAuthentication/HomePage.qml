@@ -252,6 +252,11 @@ Item {
     function resetUI() {
         statTextShort.text = "Authentication result isn't available."
         statTextShort.color = "black"
+
+        myPathDrawer.pathData = []
+        pathDrawerComponent.requestPaint([])
+
+        textStatArea.text = "No data. The device has been reset!"
     }
 }
 
