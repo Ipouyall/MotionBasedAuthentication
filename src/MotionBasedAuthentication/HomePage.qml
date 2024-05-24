@@ -1,5 +1,7 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
 import QtQuick.Dialogs
 import QtQuick.Controls.Material
 import MotionBasedAuthentication 1.0
@@ -64,8 +66,6 @@ Item {
             topMargin: 460
         }
         spacing: 20
-        // width: 500
-        // height: 400
 
         Button {
             id: startRecordingBtn
@@ -73,7 +73,7 @@ Item {
             width: 140
             height: 50
 
-            text: "Start Rec"
+            text: "Start Attempt"
 
             onClicked: {
                 motionBasedAuthentication.startRecording()
@@ -86,10 +86,45 @@ Item {
             width: 140
             height: 50
 
-            text: "End Rec"
+            text: "End Attempt"
 
             onClicked: {
                 motionBasedAuthentication.endRecording()
+            }
+        }
+    }
+
+    Row {
+        anchors {
+            top: parent.top
+            horizontalCenter: parent.horizontalCenter
+            topMargin: 520
+        }
+        spacing: 20
+
+        Button {
+            id: startCapturingBtn
+
+            width: 140
+            height: 50
+
+            text: "Start Pattern"
+
+            onClicked: {
+                motionBasedAuthentication.startPattern()
+            }
+        }
+
+        Button {
+            id: endCapturingBtn
+
+            width: 140
+            height: 50
+
+            text: "End Pattern"
+
+            onClicked: {
+                motionBasedAuthentication.endPattern()
             }
         }
     }
@@ -98,13 +133,11 @@ Item {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: 520
+            topMargin: 570
         }
-        spacing: 20
-        // width: parent.width * 0.6
-        // height: parent.height * 0.8
+        spacing: 10
 
-        Button {
+        Button { // TODO: remove this. the dialog should be apeared after end attempting
             id: authenticateBtn
 
             width: 300
@@ -151,8 +184,6 @@ Item {
             width: 300
             height: 50
 
-            // horizontalCenter: parent.horizontalCenter
-
             text: "Reset"
 
             onClicked: {
@@ -185,8 +216,5 @@ Item {
             }
             open()
         }
-
-        // To have OK button
-        // standardButtons: Dialog.Ok
     }
 }

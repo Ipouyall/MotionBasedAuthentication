@@ -28,6 +28,8 @@ Q_SIGNALS:
 public Q_SLOTS:
     void startRecording();
     void endRecording();
+    void startPattern();
+    void endPattern();
     void authenticate();
     void showData();
     void getPath();

@@ -22,6 +22,10 @@ void MotionBasedAuth::authenticate() {
     emit statusChanged(is_authenticated);
 }
 
+void MotionBasedAuth::startPattern(){}
+void MotionBasedAuth::endPattern(){}
+
+
 void MotionBasedAuth::showData() {
     data = "A sample data";
     emit dataChanged(data);
