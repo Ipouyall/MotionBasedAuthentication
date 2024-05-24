@@ -35,7 +35,7 @@ Item {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: 10
+            topMargin: parent.height * 0.017
         }
         id: statTextShort
         width: 400
@@ -132,7 +132,7 @@ Item {
             horizontalCenter: parent.horizontalCenter
             topMargin: parent.height * 0.584
         }
-        spacing: 10
+        spacing: parent.height * 0.017
 
         Row {
             spacing: 20
