@@ -21,7 +21,10 @@ void MotionBasedAuth::startRecording() {
 
 void MotionBasedAuth::endRecording() {
     sensorHandler->stop();
-    attemptPaths.last() = sensorHandler->getPaths();
+    if (attemptPaths.size() > 0)
+        attemptPaths.last() = sensorHandler->getPaths();
+    else
+        attemptPaths.append(sensorHandler->getPaths());
     qDebug() << "attempt Path: ";
     sensorHandler->printAllPaths();
     attempt_number++;
