@@ -75,9 +75,10 @@ Item {
 
     function requestPaint(path) {
         pathData = path
-        console.log("(1) Length:", path.length)
-        for (var i = 0; i < path.length; i++)
-            console.log("(1) [",i,"]: ", path[i])
+        for (var i = 0; i < path.length; i++){
+            var d = JSON.parse(path[i])
+            pathData[i] = d
+        }
         patternMap.requestPaint()
     }
 
