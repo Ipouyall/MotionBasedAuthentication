@@ -21,14 +21,20 @@ void MotionBasedAuth::startRecording() {
 
 void MotionBasedAuth::endRecording() {
     sensorHandler->stop();
-    if (attemptPaths.size() > 0)
-        attemptPaths.last() = sensorHandler->getPaths();
-    else
-        attemptPaths.append(sensorHandler->getPaths());
-    qDebug() << "attempt Path: ";
-    sensorHandler->printAllPaths();
-    attempt_number++;
-    authenticate();
+    QVector<Path> recordPath = sensorHandler->getPaths();
+    if (!recordPath.isEmpty()) {
+        if (attemptPaths.size() > 0)
+            attemptPaths.last() = sensorHandler->getPaths();
+        else
+            attemptPaths.append(sensorHandler->getPaths());
+        qDebug() << "attempt Path: ";
+        sensorHandler->printAllPaths();
+        attempt_number++;
+        authenticate();
+    } else {
+        is_authenticated = false;
+        emit statusChanged(is_authenticated);
+    }
 }
 
 void MotionBasedAuth::authenticate() {
