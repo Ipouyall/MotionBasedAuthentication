@@ -51,7 +51,7 @@ Item {
         width: parent.width * 0.75
         height: parent.height * 0.45
         anchors.centerIn: parent
-        anchors.topMargin: parent.height * 0.5
+        anchors.topMargin: parent.height * 0.6
 
         Flickable {
             width: parent.width
@@ -82,7 +82,7 @@ Item {
         width: parent.width * 0.75
         height: parent.height * 0.45
         anchors.centerIn: parent
-        anchors.topMargin: parent.height * 0.5
+        anchors.topMargin: parent.height * 0.6
         property variant pathData: []
 
         PathDrawer {
@@ -98,7 +98,7 @@ Item {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: parent.height * 0.517
+            topMargin: parent.height * 0.56
         }
         spacing: 20
 
@@ -134,7 +134,7 @@ Item {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: parent.height * 0.584
+            topMargin: parent.height * 0.62
         }
         spacing: parent.height * 0.017
 
@@ -211,26 +211,12 @@ Item {
                 resetUI()
             }
         }
-
-        Button { // TODO: remove this. the dialog should be apeared after end attempting
-            id: authenticateBtn
-
-            width: 300
-            height: 50
-
-            text: "Authenticate"
-
-            onClicked: {
-                // motionBasedAuthentication.authenticate()
-                motionBasedAuthentication.getPath()
-            }
-        }
     }
 
     Dialog {
         id: dialog
         anchors.centerIn: parent
-        width: parent.width * 0.4
+        width: parent.width * 0.6
         height: parent.height * 0.3
 
         Label {
@@ -254,7 +240,7 @@ Item {
     }
 
     function resetUI() {
-        statTextShort.text = "Authentication result isn't available."
+        statTextShort.text = "Authentication result isn't available. The device has been reset!"
         statTextShort.color = "black"
 
         myPathDrawer.pathData = []
