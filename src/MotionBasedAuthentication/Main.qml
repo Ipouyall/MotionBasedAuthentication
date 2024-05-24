@@ -10,8 +10,10 @@ import MotionBasedAuthentication 1.0
 ApplicationWindow {
     visible: true
     title: qsTr("Motion-based Authentication")
-    width: Screen.width
-    height: Screen.height
+    // width: Screen.width
+    // height: Screen.height
+    width: 480
+    height: 600
     color: "white"
 
     StackView {

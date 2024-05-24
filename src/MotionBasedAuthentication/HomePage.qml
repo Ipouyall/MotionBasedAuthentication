@@ -16,11 +16,13 @@ Item {
         id: motionBasedAuthentication
 
         onStatusChanged: function(stat) {
+            statTextShort.text = stat ? "Successfully Authenticated!" : "Authentication Failed!"
+            statTextShort.color = stat ? "green" : "red"
             dialog.show(stat)
         }
 
         onDataChanged: function(data) {
-            textArea.text = data
+            textStatArea.text = data
         }
     }
 
@@ -28,34 +30,61 @@ Item {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: 60
+            topMargin: 10
         }
+        id: statTextShort
         width: parent.width * 0.6
         height: 50
 
-        text: "Result:"
+        text: "Authentication result isn't available"
         horizontalAlignment: Qt.AlignCenter
     }
 
-    Flickable {
-        anchors {
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
-            topMargin: 120
+    Rectangle {
+        id: flickableContainer
+        visible: false
+        width: 360
+        height: 270
+        anchors.centerIn: parent
+        anchors.topMargin: 300
+
+        Flickable {
+            width: parent.width
+            height: parent.height
+            anchors.verticalCenter: parent.top
+
+            flickableDirection: Flickable.VerticalFlick
+
+            TextArea.flickable: TextArea {
+                id: textStatArea
+                anchors.fill: parent
+
+                text: "No data"
+
+                readOnly: true
+                wrapMode: TextArea.Wrap
+            }
         }
-        width: parent.width * 0.6
-        height: parent.height * 0.3
+    }
 
-        flickableDirection: Flickable.VerticalFlick
+    Rectangle {
+        id: myPathDrawer
+        visible: true
+        width: 360
+        height: 270
+        anchors.centerIn: parent
+        anchors.topMargin: 300
 
-        TextArea.flickable: TextArea {
-            id: textArea
+        PathDrawer {
+            pathData: [
+                {"start": {"x": -100, "y": 0}, "end": {"x": 100, "y": 0}, "direction": "top", "angle": 0},
+                {"start": {"x": 100, "y": 0}, "end": {"x": 100, "y": 100}, "direction": "right", "angle": 90},
+                {"start": {"x": 100, "y": 1000}, "end": {"x": 1000, "y": 100}, "direction": "bottom", "angle": 180},
+                {"start": {"x": 1000, "y": 100}, "end": {"x": -100, "y": -300}, "direction": "left", "angle": -90}
+            ]
             anchors.fill: parent
-
-            text: "No data"
-
-            readOnly: true
-            wrapMode: TextArea.Wrap
+            width: 420
+            height: 300
         }
     }
 
@@ -63,79 +92,119 @@ Item {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: 460
+            topMargin: 310
         }
         spacing: 20
 
-        Button {
-            id: startRecordingBtn
-
-            width: 140
-            height: 50
-
-            text: "Start Attempt"
-
-            onClicked: {
-                motionBasedAuthentication.startRecording()
-            }
+        Text {
+            text: "(graphical)"
+            color: "pink"
         }
 
-        Button {
-            id: endRecordingBtn
-
-            width: 140
-            height: 50
-
-            text: "End Attempt"
-
-            onClicked: {
-                motionBasedAuthentication.endRecording()
+        Slider {
+            id: componentSlider
+            width: 100
+            from: 0
+            to: 1
+            stepSize: 1
+            onValueChanged: {
+                if (value === 0) {
+                    myPathDrawer.visible = true
+                    flickableContainer.visible = false
+                } else {
+                    myPathDrawer.visible = false
+                    flickableContainer.visible = true
+                }
             }
+        }
+        Text {
+            text: "(textual)"
+            color: "pink"
         }
     }
 
-    Row {
-        anchors {
-            top: parent.top
-            horizontalCenter: parent.horizontalCenter
-            topMargin: 520
-        }
-        spacing: 20
-
-        Button {
-            id: startCapturingBtn
-
-            width: 140
-            height: 50
-
-            text: "Start Pattern"
-
-            onClicked: {
-                motionBasedAuthentication.startPattern()
-            }
-        }
-
-        Button {
-            id: endCapturingBtn
-
-            width: 140
-            height: 50
-
-            text: "End Pattern"
-
-            onClicked: {
-                motionBasedAuthentication.endPattern()
-            }
-        }
-    }
 
     Column {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: 570
+            topMargin: 350
         }
         spacing: 10
+
+        Row {
+            spacing: 20
+
+            Button {
+                id: startRecordingBtn
+
+                width: 140
+                height: 50
+
+                text: "Start Attempt"
+
+                onClicked: {
+                    motionBasedAuthentication.startRecording()
+                }
+            }
+
+            Button {
+                id: endRecordingBtn
+
+                width: 140
+                height: 50
+
+                text: "End Attempt"
+
+                onClicked: {
+                    motionBasedAuthentication.endRecording()
+                }
+            }
+        }
+
+        Row {
+            spacing: 20
+
+            Button {
+                id: startCapturingBtn
+
+                width: 140
+                height: 50
+
+                text: "Start Pattern"
+
+                onClicked: {
+                    motionBasedAuthentication.startPattern()
+                }
+            }
+
+            Button {
+                id: endCapturingBtn
+
+                width: 140
+                height: 50
+
+                text: "End Pattern"
+
+                onClicked: {
+                    motionBasedAuthentication.endPattern()
+                }
+            }
+        }
+        Button {
+            id: reset
+
+            width: 300
+            height: 50
+
+            text: "Reset"
+
+            onClicked: function () {
+                // TODO: reset backend
+
+                resetUI()
+            }
+        }
 
         Button { // TODO: remove this. the dialog should be apeared after end attempting
             id: authenticateBtn
@@ -147,47 +216,6 @@ Item {
 
             onClicked: {
                 motionBasedAuthentication.authenticate()
-            }
-        }
-
-        Button {
-            id: showResultBtn
-
-            width: 300
-            height: 50
-
-            text: "Show Data"
-
-            onClicked: {
-                motionBasedAuthentication.showData()
-            }
-        }
-
-        Button {
-            id: showPatternBtn
-
-            width: 300
-            height: 50
-
-            text: "Show Pattern"
-
-            onClicked: {
-                var component = Qt.createComponent("PatternPage.qml")
-                var item = component.createObject()
-                stackView.push(item)
-            }
-        }
-
-        Button {
-            id: reset
-
-            width: 300
-            height: 50
-
-            text: "Reset"
-
-            onClicked: {
-                motionBasedAuthentication.showData()
             }
         }
     }
@@ -217,4 +245,11 @@ Item {
             open()
         }
     }
+
+    function resetUI() {
+        statTextShort.text = "Authentication result isn't available."
+        statTextShort.color = "black"
+    }
 }
+
+
