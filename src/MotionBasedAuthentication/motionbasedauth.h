@@ -37,6 +37,7 @@ public Q_SLOTS:
     void authenticate();
     void showData();
     void getPath();
+    void reset();
     void newPathReceived(QVector<Path> newPath);
 
 private:

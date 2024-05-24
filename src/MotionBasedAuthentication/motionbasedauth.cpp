@@ -48,6 +48,15 @@ void MotionBasedAuth::endPattern(){
     sensorHandler->printAllPaths();
 }
 
+void MotionBasedAuth::reset() {
+    is_auth_pattern = true;
+    attempt_number = 1;
+    sensorHandler->reset();
+    authPaths.clear();
+    attemptPaths.clear();
+    qDebug() << "MotionBasedAuth reset. auth path size: " << authPaths.size() << ", attemptSize: " << attemptPaths.size();
+}
+
 
 void MotionBasedAuth::showData() {
     data = this->formatData();
@@ -77,12 +86,12 @@ QString MotionBasedAuth::formatPath(const Path &path) {
                    "End:(X: %4, Y: %5, Z: %6)\n"
                    "Angle: %7\n"
                    "Direction: %8\n\n")
-        .arg(path.getStartX())
-        .arg(path.getStartY())
-        .arg(path.getStartZ())
-        .arg(path.getEndX())
-        .arg(path.getEndY())
-        .arg(path.getEndZ())
+        .arg(QString::number(path.getStartX(), 'f', 3))
+        .arg(QString::number(path.getStartY(), 'f', 3))
+        .arg(QString::number(path.getStartZ(), 'f', 3))
+        .arg(QString::number(path.getEndX(), 'f', 3))
+        .arg(QString::number(path.getEndY(), 'f', 3))
+        .arg(QString::number(path.getEndZ(), 'f', 3))
         .arg(path.getAngle())
         .arg(path.getDirection());
 }
@@ -102,22 +111,11 @@ void MotionBasedAuth::newPathReceived(QVector<Path> newPath) {
 }
 
 void MotionBasedAuth::getPath() {
-    // Simulate loading path data from JSON object
-    // QJsonArray pathArray = QJsonArray::fromStringList({
-    //     "{\"start\": {\"x\": 0, \"y\": 0}, \"end\": {\"x\": 100, \"y\": 0}, \"direction\": \"top\", \"angle\": 0}",
-    //     "{\"start\": {\"x\": 100, \"y\": 0}, \"end\": {\"x\": 100, \"y\": 100}, \"direction\": \"right\", \"angle\": 90}",
-    //     "{\"start\": {\"x\": 100, \"y\": 100}, \"end\": {\"x\": 0, \"y\": 100}, \"direction\": \"bottom\", \"angle\": 180}",
-    //     "{\"start\": {\"x\": 0, \"y\": 100}, \"end\": {\"x\": 0, \"y\": 0}, \"direction\": \"left\", \"angle\": -90}"
-    // });
     QJsonArray pathArray = QJsonArray();
     QVector<Path> paths = sensorHandler->getPaths();
-    // for (Path path : paths) {
-    //     pathArray.append(path.toJson());
-    // }
     for (int i = 0; i < paths.size(); ++i) {
         pathArray.append(paths[i].toJson());
     }
-
     this->pathArray = pathArray;
     emit pathChanged(pathArray);
 }
