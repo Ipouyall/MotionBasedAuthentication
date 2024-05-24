@@ -33,6 +33,9 @@ void MotionBasedAuth::authenticate() {
     // TODO: now we just imagine that the user is authenticated successfully
     QJsonObject result = this->comparePaths(attemptPaths.last());
     is_authenticated = result["authenticated"].toBool();
+    if (!is_authenticated) {
+        emit logChanged(result["error"].toString());
+    }
     emit statusChanged(is_authenticated);
 }
 

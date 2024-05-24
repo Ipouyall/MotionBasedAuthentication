@@ -227,6 +227,7 @@ Item {
 
             onClicked: function () {
                 // TODO: reset backend
+                motionBasedAuthentication.reset()
 
                 resetUI()
             }
