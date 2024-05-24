@@ -13,7 +13,7 @@ ApplicationWindow {
     // width: Screen.width
     // height: Screen.height
     width: 480
-    height: 600
+    height: 800
     color: "white"
 
     StackView {
