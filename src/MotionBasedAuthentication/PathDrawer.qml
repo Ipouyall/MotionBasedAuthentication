@@ -70,7 +70,7 @@ Item {
             ctx.stroke();
         }
 
-        // Component.onCompleted: patternMap.requestPaint()
+        Component.onCompleted: patternMap.requestPaint()
     }
 
     function requestPaint(path) {

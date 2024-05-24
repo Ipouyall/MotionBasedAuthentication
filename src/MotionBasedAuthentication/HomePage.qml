@@ -9,8 +9,8 @@ import MotionBasedAuthentication 1.0
 Item {
     id: homePage
 
-    width: parent.width
-    height: parent.height
+    width: 480
+    height: 600
 
     MotionBasedAuthentication {
         id: motionBasedAuthentication
@@ -26,7 +26,6 @@ Item {
         }
 
         onPathChanged: function(path) {
-            console.log("New path data received:", path)
             myPathDrawer.pathData = path
             pathDrawerComponent.requestPaint(path)
         }
@@ -39,7 +38,7 @@ Item {
             topMargin: 10
         }
         id: statTextShort
-        width: parent.width * 0.6
+        width: 300
         height: 50
 
         text: "Authentication result isn't available"
@@ -48,7 +47,7 @@ Item {
 
     Rectangle {
         id: flickableContainer
-        visible: false
+        visible: true
         width: 360
         height: 270
         anchors.centerIn: parent
