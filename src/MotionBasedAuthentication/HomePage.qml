@@ -9,8 +9,8 @@ import MotionBasedAuthentication 1.0
 Item {
     id: homePage
 
-    width: 480
-    height: 600
+    width: parent.width
+    height: parent.height
 
     MotionBasedAuthentication {
         id: motionBasedAuthentication
@@ -38,7 +38,7 @@ Item {
             topMargin: 10
         }
         id: statTextShort
-        width: 300
+        width: 400
         height: 50
 
         text: "Authentication result isn't available"
@@ -48,10 +48,10 @@ Item {
     Rectangle {
         id: flickableContainer
         visible: true
-        width: 360
-        height: 270
+        width: parent.width * 0.75
+        height: parent.height * 0.45
         anchors.centerIn: parent
-        anchors.topMargin: 300
+        anchors.topMargin: parent.height * 0.5
 
         Flickable {
             width: parent.width
@@ -75,18 +75,18 @@ Item {
     Rectangle {
         id: myPathDrawer
         visible: false
-        width: 360
-        height: 270
+        width: parent.width * 0.75
+        height: parent.height * 0.45
         anchors.centerIn: parent
-        anchors.topMargin: 300
+        anchors.topMargin: parent.height * 0.5
         property variant pathData: []
 
         PathDrawer {
             id: pathDrawerComponent
             pathData: myPathDrawer.pathData
             anchors.fill: parent
-            width: 420
-            height: 300
+            width: parent.width
+            height: parent.height
         }
     }
 
@@ -94,7 +94,7 @@ Item {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: 310
+            topMargin: parent.height * 0.517
         }
         spacing: 20
 
@@ -130,7 +130,7 @@ Item {
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
-            topMargin: 350
+            topMargin: parent.height * 0.584
         }
         spacing: 10
 
