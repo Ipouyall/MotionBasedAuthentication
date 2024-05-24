@@ -1,6 +1,9 @@
 #include "motionbasedauth.h"
 
-MotionBasedAuth::MotionBasedAuth(QObject *parent) : QObject(parent) {}
+MotionBasedAuth::MotionBasedAuth(QObject *parent) :
+    QObject(parent) {
+    sensorHandler = new SensorHandler();
+}
 
 QJsonArray MotionBasedAuth::getPath() const {
     return pathArray;
@@ -8,10 +11,16 @@ QJsonArray MotionBasedAuth::getPath() const {
 
 void MotionBasedAuth::startRecording() {
     // TODO: Add start record functionality/UI here
+    sensorHandler->reset();
+    sensorHandler->start();
 }
 
 void MotionBasedAuth::endRecording() {
-    // TODO: Add end record functionality/UI here
+    sensorHandler->stop();
+    attemptPaths.append(sensorHandler->getPaths());
+    qDebug() << "attempt Path: ";
+    sensorHandler->printAllPaths();
+    authenticate();
 }
 
 void MotionBasedAuth::authenticate() {
@@ -22,8 +31,16 @@ void MotionBasedAuth::authenticate() {
     emit statusChanged(is_authenticated);
 }
 
-void MotionBasedAuth::startPattern(){}
-void MotionBasedAuth::endPattern(){}
+void MotionBasedAuth::startPattern(){
+    sensorHandler->reset();
+    sensorHandler->start();
+}
+void MotionBasedAuth::endPattern(){
+    sensorHandler->stop();
+    authPaths = sensorHandler->getPaths();
+    qDebug() << "auth Path: ";
+    sensorHandler->printAllPaths();
+}
 
 
 void MotionBasedAuth::showData() {

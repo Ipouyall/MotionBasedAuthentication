@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include "sensorhandler.h"
 
 class MotionBasedAuth : public QObject
 {
@@ -35,9 +36,12 @@ public Q_SLOTS:
     void getPath();
 
 private:
+    SensorHandler* sensorHandler;
     bool is_authenticated;
     QString data;
     QJsonArray pathArray;
+    QVector<Path> authPaths;
+    QVector<QVector<Path>> attemptPaths;
 };
 
 #endif // MOTIONBASEDAUTH_H

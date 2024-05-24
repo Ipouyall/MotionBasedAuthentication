@@ -17,13 +17,15 @@ public:
     void reset(); // Method to reset the handler
     void start(); // Method to start the handler
     void stop();  // Method to stop the handler
+    QVector<Path> getPaths() const;
+    void printAllPaths() const;
 
 private slots:
     void handlePathData(double deltaX, double deltaY, double deltaZ);
 
 private:
     void addNewPath(double deltaX, double deltaY, double deltaZ, double angleZ);
-    void printAllPaths() const;
+
 
     GyroscopeHandler *gyroscopeHandler;
     AccelerometerHandler *accelerometerHandler;

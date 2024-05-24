@@ -11,8 +11,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     qmlRegisterType<MotionBasedAuth> ("MotionBasedAuthentication", 1, 0, "MotionBasedAuthentication");
-    SensorHandler sensor;
-    sensor.start();
+    // SensorHandler sensor;
+    // sensor.start();
 
     const QUrl url(QStringLiteral("qrc:/MotionBasedAuthentication/Main.qml"));
     QObject::connect(

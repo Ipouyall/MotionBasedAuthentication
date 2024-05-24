@@ -2,6 +2,10 @@
 #define PATH_H
 
 #include <QString>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonValue>
 
 class Path
 {
@@ -17,8 +21,8 @@ public:
     double getEndZ() const;
     double getAngle() const;
     QString getDirection() const;
-
     QString toString() const;
+    QJsonObject toJson() const;
 
 private:
     double startX, startY, startZ;

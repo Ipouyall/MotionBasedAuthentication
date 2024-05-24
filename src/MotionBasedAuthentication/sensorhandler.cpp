@@ -144,3 +144,5 @@ void SensorHandler::stop()
     gyroscopeHandler->stop();
     accelerometerHandler->stop();
 }
+
+QVector<Path> SensorHandler::getPaths() const { return paths; }

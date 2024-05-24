@@ -28,3 +28,22 @@ QString Path::toString() const
         .arg(angle)
         .arg(direction);
 }
+
+QJsonObject Path::toJson() const {
+    QJsonObject startObject;
+    startObject["x"] = startX;
+    startObject["y"] = startY;
+    startObject["z"] = startZ;
+
+    QJsonObject endObject;
+    endObject["x"] = endX;
+    endObject["y"] = endY;
+    endObject["z"] = endZ;
+
+    QJsonObject jsonObject;
+    jsonObject["start"] = startObject;
+    jsonObject["end"] = endObject;
+    jsonObject["angle"] = angle;
+    jsonObject["direction"] = direction;
+    return jsonObject;
+}
