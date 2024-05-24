@@ -20,6 +20,10 @@ qt_add_qml_module(appMotionBasedAuthentication
         SOURCES motionbasedauth.h motionbasedauth.cpp
         QML_FILES HomePage.qml
         QML_FILES PathDrawer.qml
+        SOURCES
+        SOURCES
+        SOURCES kalmanfilter.h kalmanfilter.cpp
+        SOURCES accelerometerhandler.h accelerometerhandler.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
