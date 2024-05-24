@@ -20,6 +20,8 @@ qt_add_qml_module(appFirstAndroidAccelometer
     QML_FILES Main.qml
     SOURCES accelerometerhandler.h accelerometerhandler.cpp
     SOURCES kalmanfilter.h kalmanfilter.cpp
+    SOURCES gyroscopehandler.h gyroscopehandler.cpp
+    SOURCES path.h path.cpp
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
