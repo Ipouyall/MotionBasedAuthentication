@@ -201,7 +201,3 @@ The pattern validation part in the provided code is implemented in the MotionBas
  After comparing the patterns, the authentication result is emitted through the statusChanged() signal, indicating whether the authentication was successful or not.
  
 ---
-
-## Perfetto
-
----
